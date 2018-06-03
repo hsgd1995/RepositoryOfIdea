@@ -64,6 +64,7 @@
 <div class="row main">
     <div class="col-3 menu">
         <ul class="list-unstyled">
+            <li><span class="icon-home"></span>欢迎使用</li>
             <li><span class="icon-user"></span>用户管理</li>
             <li><span class="icon-sitemap"></span>部门管理</li>
             <li><span class="icon-suitcase"></span>职位管理</li>
@@ -75,13 +76,11 @@
         </p>
     </div>
     <div class="col-9 page-wrapper">
-        欢迎使用人力管理系统
+        <iframe src="${basePath}/notice/welcome" width="100%" height="100%" FRAMEBORDER="0" NAME="_blank" id="_blank"></iframe>
     </div>
 </div>
 </body>
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
+<script src="${basePath}/js/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
@@ -92,6 +91,13 @@
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
 <script>
+
+    // 禁用后退按钮
+    history.pushState(null, null, document.URL);
+    window.addEventListener('popstate', function (ev) {
+        history.pushState(null, null, document.URL);
+    });
+
     $(function () {
         // 菜单点击事件
         $('.menu li').click(function (event) {
@@ -103,6 +109,9 @@
 
             // 2.点击了某个菜单，在中心区域加载指定的页面
             switch ($(this).text()) {
+                case '欢迎使用':
+                    $('.page-wrapper').html("<iframe src='${basePath}/notice/welcome' width='100%' height='100%' frameborder='0' name='_blank' id='_blank'></iframe>");
+                    break;
                 case '用户管理':
                     $('.page-wrapper').html("<iframe src='user' width='100%' height='100%' frameborder='0' name='_blank' id='_blank'></iframe>");
                     break;

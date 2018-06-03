@@ -27,44 +27,41 @@ $(function () {
 function dataHandler(data) {
     //总记录数
     var recordCount = data.recordCount;
-    //当前页面
+    // 当前页码
     var pageIndex = data.pageIndex;
-    //当前分页数
+    // 当前分页数
     var pageSize = data.pageSize;
-    //列表数据
+    // 列表数据
     var pageList = data.pageList;
 
-    console.log("pageIndex:"+pageIndex+",pageSize:"+pageSize+",recordCount:"+recordCount);
-    console.log("list:",pageList);
-    //列表数据处理
+    // 列表数据处理
     listHandler(pageList);
 
-    //分页信息处理
-    if(pageList)
-        pageHandler(recordCount,pageIndex,pageSize);
+    // 分页信息处理
+    if (pageList)
+        pageHandler(recordCount, pageIndex, pageSize);
     else
-        pageHandler(0,1,4);
+        pageHandler(0, 1, 4);
 }
 
 /**
  * 列表数据处理
- * @param list
  */
 function listHandler(list) {
-    // tbody在追加列表之前必须是空的
+    //  tbody在追加列表之前必须是空的
     $('tbody').html('');
 
-    //列表不存在
-    if(!list)
+    // 列表不存在
+    if (!list)
         return;
 
-    //动态加载列表数据，通过js方式创建元素并附加到tbody
-    //数据行数取决于list的元素个数，遍历list
-    for(var index=0;index<list.length;index){
-        //定义每行记录对应的notice对象
-        //定义行
+    // 动态加载列表数据，通过js方式创建元素并附加到tbody
+    // 数据行数取决于list的元素个数，遍历list
+    for (var index = 0; index < list.length; index++) {
+        // 定义每行记录对应的notice对象
+        // 定义行
         var tr = $('<tr></tr>');
-        //定义列
+        // 定义列
         var ck = $('<th scope="row"><input type="checkbox"></th>')
         var th = $('<th scope="row">' + (index + 1) + '</th>');
         var noticeId = $('<td>' + list[index].id + '</td>');
@@ -85,10 +82,10 @@ function listHandler(list) {
  * @param pageIndex
  * @param pageSize
  */
-function pageHandler(recordCount,pageIndex,pageSize) {
-    //清除旧的分页栏
+function pageHandler(recordCount, pageIndex, pageSize) {
+    // 清除旧的分页栏
     $('.page-link').each(function () {
-        if (!$(this).attr('aria-label')){
+        if (!$(this).attr('aria-label')) {
             $(this).parent().remove();
         }
     });
@@ -143,6 +140,7 @@ function pageHandler(recordCount,pageIndex,pageSize) {
     // 处理右侧打印信息如：Displaying 1 to 10 14 items.
     $('#displaying').text('Displaying ' + pageIndex + ' to ' + totalPage + ' page,  total ' + recordCount + " items.");
 }
+
 /**
  * 计算总页数
  * @param recordCount
@@ -215,16 +213,150 @@ function currPage(that, pageSize) {
         dataHandler(data);
     }, 'json');
 }
+
+/**
+ * 获取行的id
+ * @param that
+ * @returns {jQuery}
+ */
+function getIdOfRow(that) {
+    return $(that).parent().parent().children().eq(2).text();
+}
+
+/**
+ * 查看记录
+ * @param that
+ */
+function lookItem(that) {
+    //1.获得查看行id
+    var userId = getIdOfRow(that);
+    console.log('通知id', userId);
+    //2.加载查看页面
+    //2-1.查看页面是请求服务器得到的
+    $(parent.document).find('.page-wrapper').html("<iframe src='" + basePath + "/notice/look/" + userId + "' width='100%' height='100%' frameborder='0' name='_blank' id='_blank'></iframe>");
+}
+
+
+
 /**
  * 新增
  */
 function addItem() {
-    $(parent.document).find('.page-wrapper').html("")
+    $(parent.document).find('.page-wrapper').html("<iframe src='" + basePath + "/notice/add' width='100%' height='100%' frameborder='0' name='_blank' id='_blank'></iframe>");
+
 }
+
 
 /**
  * 查询
  */
 function query() {
+    var title = $('#title').val();
+    var content = $('#content').val();
+    var createDate = $('#createDate').val();
+    console.log('title:'+title+',content:'+content+',createDate:'+createDate);
+    $.get(basePath+'/notice/list',{title:title,content:content,createDate:createDate},function (data) {
+        dataHandler(data);
+    },'json');
 
+}
+
+
+/**
+ * 更新记录
+ * @param that
+ */
+function updateItem(that) {
+    console.log('更新用户');
+    //1.获得查看行id
+    var userId = getIdOfRow(that);
+    console.log('用户id', userId);
+    //2.加载更新页面
+    //2-1.更新页面是请求服务器得到的
+
+    $(parent.document).find('.page-wrapper').html("<iframe src='" + basePath + "/notice/update?id=" + userId + "' width='100%' height='100%' frameborder='0' name='_blank' id='_blank'></iframe>");
+}
+
+/**
+ * 删除
+ */
+function deleteItem(that) {
+    //1.设置模态框
+    initModal('删除','确认删除吗？','取消','提交');
+    //2.显示模态框
+    $('#userModalCenter').modal('show');
+    //3.按钮事件
+    $('#userModalCenter .modal-footer .btn-primary').unbind().click(function () {
+        //1.关闭之前的模态框
+        $('#userModalCenter').modal('hide');
+        //2.获得删除行的userId
+        var id = getIdOfRow(that);
+        //3.请求服务器删除该记录
+        $.getJSON(
+            basePath + '/notice/del/' + id, function (data) {
+                alert(data.message);
+                //3-1刷新列表
+                $.getJSON(basePath + '/notice/list', {notice: null, pageIndex: 1, pageSize: 4}, function (data) {
+                    dataHandler(data);
+                });
+            }
+        );
+    });
+}
+
+/**
+ * 批量删除
+ */
+function batchDeleteItems() {
+    if($(':checkbox:checked').length==0){
+        alert('请先选择要删除的记录...')
+        return;
+    }
+    //1.设置模态框
+    initModal('删除','确认删除'+$(':checkbox:checked').length+'条记录吗？','取消','提交');
+    //2.显示模态框
+    $('#userModalCenter').modal('show');
+    //3.按钮事件
+    $('#userModalCenter .modal-footer .btn-primary').unbind().click(function () {
+        //1.关闭之前的模态框
+        $('#userModalCenter').modal('hide');
+        //2.获得删除行的userId
+        var noticeId = new Array();
+        $(':checkbox:checked').each(function () {
+            noticeId.push(getIdOfRow($(this)));
+        });
+        //3.请求服务器删除该记录
+        $.getJSON(
+            basePath + '/notice/batchDel',{ids:noticeId}, function (data) {
+                alert(data.message);
+                //3-1刷新列表
+                $.getJSON(basePath + '/notice/list', {notice: null, pageIndex: 1, pageSize: 4}, function (data) {
+                    dataHandler(data);
+                });
+            }
+        );
+    });
+}
+
+/**
+ * 初始化模态框
+ * @param title
+ * @param body
+ * @param btn1
+ * @param btn2
+ */
+function initModal(title, body, btn1, btn2) {
+    //标题
+    $('#userModalCenter .modal-title').text(title);
+    //内容
+    $('#userModalCenter .modal-body').text(body);
+    //按钮
+    if (btn1)
+        $('#userModalCenter .modal-footer .btn-secondary').text(btn1);
+    if (btn2)
+        $('#userModalCenter .modal-footer .btn-primary').text(btn2);
+    if (!btn1 && btn2)
+        $('userModalCenter .modal-footer').hide();
+    else
+        $('#userModalCenter .modal-footer').show();
 }

@@ -15,7 +15,7 @@
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
     <!-- mvc注解驱动 -->
-    <mvc:annotation-driven/>
+    <mvc:annotation-driven conversion-service="conversionService"/>
 
 
     <!-- 静态资源，用于页面上加载静态资源是不被拦截-->
@@ -49,4 +49,12 @@
         </mvc:interceptor>
     </mvc:interceptors>
 
+    <!-- 配置日期格式转换器 -->
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="converters">
+            <list>
+                <bean class="com.entor.hrm.converter.DateConverter"></bean>
+            </list>
+        </property>
+    </bean>
 </beans>

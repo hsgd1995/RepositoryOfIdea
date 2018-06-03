@@ -29,7 +29,7 @@ public class UserController {
      * 若不转成Date类型，会出现404错误
      * @param webDataBinder
      */
-    @InitBinder
+    /*@InitBinder
     public void initBinder(WebDataBinder webDataBinder){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         sdf.setLenient(false);//设置解析非严格模式
@@ -37,7 +37,10 @@ public class UserController {
         //若实体中的属性是Date类型，则在接收到对应的页面的值时，将String类型的页面的值，转换成Date类型
         webDataBinder.registerCustomEditor(Date.class,new CustomDateEditor(sdf,true));//true:允许输入空值，false:不能为空值
 
-    }
+    }*/
+
+
+    //登录方法
 
     /**
      * 测试前端和后台的交互是否成功
