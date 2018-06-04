@@ -23,6 +23,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
+
+    @Override
+    public User findByLoginNameAndPassword(String loginName, String password) {
+        return userMapper.selectByLoginNameAndPassword(loginName,password);
+    }
+
     @Transactional(readOnly = true)
     @Override
     public List<User> getAll() {
@@ -85,5 +91,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getById(Integer id) {
         return userMapper.selectById(id);
+    }
+
+    @Override
+    public List<User> getByIds(Integer[] ids) {
+        Map<String,Object> params = new HashMap<>();
+        params.put("ids",ids);
+        return userMapper.selectByIds(params);
     }
 }

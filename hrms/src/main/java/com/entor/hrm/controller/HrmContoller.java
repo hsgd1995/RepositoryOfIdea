@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HrmContoller {
 
+    /**
+     * 登录页面
+     * @return
+     */
     @GetMapping("/index")
-    public String index(Model model) {
-        User user = new User();
-        user.setLoginName("zhangsan");
-        user.setUsername("张三");
-        model.addAttribute("user", user);
+    public String index() {
         return "login";
     }
 
@@ -40,5 +40,10 @@ public class HrmContoller {
     @GetMapping("/notice")
     public String notice() {
         return "/notice/hrms_notice";
+    }
+
+    @GetMapping("/document")
+    public String document() {
+        return "/document/hrms_document";
     }
 }

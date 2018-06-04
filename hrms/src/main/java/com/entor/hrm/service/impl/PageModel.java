@@ -4,6 +4,10 @@ import java.util.List;
 
 import static com.entor.hrm.util.common.HrmConstants.PAGE_DEFAULT_SIZE;
 
+/**
+ * 分页
+ * @param <T>
+ */
 public class PageModel<T> {
     /**
      * 分页总记录数

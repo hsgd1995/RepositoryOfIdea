@@ -69,4 +69,19 @@ public interface UserService {
      * @return
      */
     User getById(Integer id);
+
+    /**
+     * 登录
+     * @param loginName
+     * @param password
+     * @return
+     */
+    User findByLoginNameAndPassword(String loginName, String password);
+
+    /**
+     * 获取多个id对应的记录
+     * @param ids
+     * @return
+     */
+    List<User> getByIds(Integer[] ids);
 }

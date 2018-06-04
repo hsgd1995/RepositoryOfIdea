@@ -18,4 +18,7 @@ public class HrmConstants {
     public static final String USER_SESSION = "user_session";
     /* 默认分页记录数 */
     public static final int PAGE_DEFAULT_SIZE = 4;
+
+    /* 文档上传路径 */
+    public static final String DOC_UPLOAD_PATH = "D:/upload/";
 }

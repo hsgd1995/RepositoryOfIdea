@@ -40,12 +40,30 @@
         <property name="contentType" value="text/html;charset=utf-8"/>
     </bean>
 
+    <!-- 上传文档视图解析器 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 上传文件大小上限，单位为字节(10MB) -->
+        <property name="maxUploadSize">
+            <value>10485760</value>
+        </property>
+        <!-- 请求的编码格式 -->
+        <property name="defaultEncoding">
+            <value>UTF-8</value>
+        </property>
+    </bean>
+
     <!-- 拦截器配置 -->
     <mvc:interceptors>
+        <!-- 配置基本url -->
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <!-- <mvc exclude-mapping path="/login.html"/> -->
             <bean class="com.entor.hrm.interceptor.BasePathInterceptor"></bean>
+        </mvc:interceptor>
+        <!-- 访问权限 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.entor.hrm.interceptor.AuthorizedInterceptor"></bean>
         </mvc:interceptor>
     </mvc:interceptors>
 

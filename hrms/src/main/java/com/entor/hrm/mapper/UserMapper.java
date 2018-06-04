@@ -88,4 +88,23 @@ public interface UserMapper {
      */
     @DeleteProvider(type = UserDynaSQLProvider.class, method = "batchDeleteUser")
     void batchDelete(Map<String, Object> params);
+
+    @Select("select * from "+USER_TABLE+" where login_name = #{loginName} and password = #{password}")
+    @Results({
+            @Result(column = "login_name",property = "loginName",javaType = java.lang.String.class),
+            @Result(column = "create_date",property = "createDate",javaType = java.util.Date.class)
+    })
+    User selectByLoginNameAndPassword(@Param("loginName") String loginName, @Param("password") String password);
+
+    /**
+     * 根据多个id查询记录
+     * @param params
+     * @return
+     */
+    @SelectProvider(type = UserDynaSQLProvider.class,method = "selectByIds")
+    @Results({
+            @Result(column = "login_name",property = "loginName",javaType = java.lang.String.class),
+            @Result(column = "create_date",property = "createDate",javaType = java.util.Date.class)
+    })
+    List<User> selectByIds(Map<String,Object> params);
 }

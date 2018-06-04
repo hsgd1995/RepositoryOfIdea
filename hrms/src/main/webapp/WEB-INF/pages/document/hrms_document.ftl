@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="${basePath}/css/font-awesome.css">
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
     <link href="https://cdn.bootcss.com/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker3.css" rel="stylesheet">
     <link href="https://cdn.bootcss.com/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker3.standalone.css"
           rel="stylesheet">
-<#--<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.js"></script>
-<script src="js/bootstrap.bundle.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>-->
     <style>
+        .form-group, .form-control, table {
+            font-size: 14px;
+        }
+
         .container-fluid {
             background: #f7f7f7;
             padding: 20px 30px;
@@ -21,74 +21,57 @@
         h4.page-title {
             padding-bottom: 9px;
             margin: 10px 0 45px;
+            border-bottom: 5px solid darkmagenta;
         }
 
-        button {
-            margin-right: 5px;
-        }
-
-        .modal-dialog{
+        .modal-dialog {
             width: 300px;
             margin: 0 auto;
             margin-top: -360px;
         }
     </style>
-
-
 </head>
 <body class="container-fluid">
 <div class="row">
     <div class="col-12">
-        <h4 class="border-bottom page-title">用户管理</h4>
+        <h4 class="page-title">下载管理</h4>
         <input type="hidden" id="basePath" value="${basePath}">
-        <#if commonMessage?exists>
+          <#if commonMessage?exists>
             <p>${commonMessage.message}</p>
-        </#if>
+          </#if>
         <div class="row">
             <div class="col-3">
-                <button class="btn btn-sm btn-primary" onclick="addItem();">新增</button>
-                <button class="btn btn-sm btn-danger" onclick="batchDeleteItems();">批量删除</button>
-                <button class="btn btn-sm btn-success" onclick="exportItems();">导出Excel</button>
+                <div class="form-group">
+                    <button class="btn btn-sm btn-primary" onclick="uploadItem();">上传</button>
+                    <button class="btn btn-sm btn-danger" onclick="batchDeleteItems();">批量删除</button>
+                </div>
             </div>
             <div class="col-9">
                 <div class="form-group form-row">
-                    <label for="username" class="col col-form-label">用户名:</label>
-                    <div class="col-2">
-                        <input type="text" class="form-control" id="username" name="username" autocomplete="off">
-                    </div>
-                    <label for="createDate" class="col col-form-label">创建日期:</label>
-                    <div class="col-2">
-                        <input type="text" class="form-control" id="createDate" name="createDate" autocomplete="off">
-                    </div>
-                    <label for="status" class="col col-form-label">状态:</label>
-                    <div class="col-2">
-                        <select class="form-control" id="status" name="status">
-                            <option value="">请选择...</option>
-                            <option value="0">冻结</option>
-                            <option value="1">普通用户</option>
-                            <option value="2">管理员</option>
-                        </select>
+                    <label for="title" class="col-form-label text-right">标题:</label>
+                    <div class="col">
+                        <input type="text" class="form-control" id="title" name="title" autocomplete="off">
                     </div>
                     <div class="col">
-                        <button class="btn btn-sm btn-primary" onclick="query()">查询</button>
+                        <button class="btn btn-sm btn-primary" onclick="query();">查询</button>
                     </div>
                 </div>
             </div>
         </div>
-        <table class="table table-bordered" id="table">
+        <table class="table table-bordered">
             <thead class="table-dark">
             <tr>
                 <th scope="col"></th>
                 <th scope="col">#</th>
-                <th scope="col">用户ID</th>
-                <th scope="col">帐号</th>
-                <th scope="col">用户名</th>
+                <th scope="col">文档ID</th>
+                <th scope="col">标题</th>
                 <th scope="col">创建时间</th>
+                <th scope="col">创建人</th>
+                <th scope="col">描述</th>
                 <th scope="col">操作</th>
             </tr>
             </thead>
-            <tbody>
-
+            <tbody id="listBody">
             </tbody>
         </table>
         <div class="col-12">
@@ -111,11 +94,9 @@
             </div>
         </div>
     </div>
-
-
     <!-- 模态框 -->
-    <div class="modal fade" id="userModalCenter" tabindex="-1" role="dialog"
-         aria-labelledby="userModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="userModalCenter" tabindex="-1" role="dialog" aria-labelledby="userModalCenterTitle"
+         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -134,8 +115,7 @@
         </div>
     </div>
 </div>
-
-
+</body>
 <script src="${basePath}/js/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
@@ -145,7 +125,5 @@
         crossorigin="anonymous"></script>
 <script src="https://cdn.bootcss.com/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap-datepicker/1.8.0/locales/bootstrap-datepicker.zh-CN.min.js"></script>
-<script src="${basePath}/js/user/hrms-user.js"></script>
-
-</body>
+<script src="${basePath}/js/document/hrms-document.js"></script>
 </html>

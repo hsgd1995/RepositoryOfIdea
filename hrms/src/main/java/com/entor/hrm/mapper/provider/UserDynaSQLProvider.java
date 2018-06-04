@@ -150,4 +150,29 @@ public class UserDynaSQLProvider {
         sqlBuffer.append(")");
         return sqlBuffer.toString().replace(",)", ")");
     }
+
+    /**
+     * 根据多个id获取记录
+     * @param params
+     * @return
+     */
+    public String selectByIds(Map<String ,Object> params){
+        StringBuffer sb = new StringBuffer("select * from ");
+        sb.append(USER_TABLE).append(" where id in (");
+        if (params.get("ids")!=null){
+            Integer[] ids = (Integer[]) params.get("ids");
+            if (ids.length>0){
+                for (Integer id:ids){
+                    sb.append(id).append(",");
+                }
+            }else {
+                sb.append("null");
+            }
+        }else {
+            sb.append("null");
+        }
+        sb.append(")");
+        return sb.toString().replace(",)",")");
+    }
+
 }

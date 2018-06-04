@@ -78,9 +78,6 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     public void addNotice(Notice notice) {
-        User user = new User();
-        user.setId(1);
-        notice.setUser(user);
         noticeMapper.insert(notice);
     }
 

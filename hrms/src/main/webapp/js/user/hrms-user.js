@@ -61,6 +61,7 @@ function listHandler(list) {
         //定义行
         var tr = $('<tr></tr>');
         //定义列
+        var ck = $('<th scope="row"><input type="checkbox"></th>');
         var th = $('<th scope="row">' + (index + 1) + '</th>');
         var userId = $('<td>' + list[index].id + '</td>');
         var loginName = $('<td>' + list[index].loginName + '</td>');
@@ -75,7 +76,7 @@ function listHandler(list) {
         operation = operation + '<button type="button" class="btn-sm btn-outline-success" onclick="updateItem(this)"> 更新</button>' +
             '<button type="button" class="btn-sm btn-outline-danger" onclick="deleteItem(this);">删除</button></td>';
         // 组行和列并附加到tbody
-        $('tbody').append(tr.append(th).append(userId).append(loginName).append(username).append(createDate).append(operation));
+        $('tbody').append(tr.append(ck).append(th).append(userId).append(loginName).append(username).append(createDate).append(operation));
     }
 }
 
@@ -305,6 +306,44 @@ function deleteItem(that) {
 }
 
 /**
+ * 批量删除
+ */
+function batchDeleteItems() {
+    if($(":checkbox:checked").length==0){
+        alert('请先选择要删除的用户...');
+        return;
+    }
+    //1.设置模态框
+    initModal('删除','确认删除'+$(":checkbox:checked").length+'条记录吗？','取消','确认')
+    //2.显示模态框
+    $('#userModalCenter').modal('show');
+    //3.按钮事件
+    $('#userModalCenter .modal-footer .btn-primary').unbind().click(function () {
+        //4.关闭模态框
+        $('#userModalCenter').modal('hide');
+        //5.获取id
+        var ids = new Array();
+        for (var index = 0;index<$(':checkbox:checked').length;index++){
+            $(':checkbox:checked').each(function () {
+                ids.push(getIdOfRow($(this)));
+            });
+        }
+        //6.请求服务器删除记录
+        //此处传递参数可以加入查询条件和分页数据
+        $.get(basePath+'/user/batchDel',{ids:ids},function (data) {
+            //7.显示提示信息
+            alert(data.message);
+            //8.刷新记录
+            $.get(basePath+'/user/list',{notice:null,pageIndex:1,pageSize:4},function (listData) {
+                dataHandler(listData);
+            });
+        },'json');
+    });
+
+
+}
+
+/**
  * 冻结/解冻记录
  * @param that
  * @param status
@@ -334,6 +373,35 @@ function frozeItem(that, status) {
         }, 'json');
     });
 }
+
+/**
+ * 导出用户记录到Excel文档
+ */
+function exportItems() {
+    if($(':checkbox:checked').length==0){
+        alert('请先选择要导出的用户...');
+        return;
+    }
+    //1.设置模态框
+    initModal('导出','确认导出'+$(":checkbox:checked").length+'条记录吗？','取消','确认')
+    //2.显示模态框
+    $('#userModalCenter').modal('show');
+    //3.按钮事件
+    $('#userModalCenter .modal-footer .btn-primary').unbind().click(function () {
+        //4.关闭模态框
+        $('#userModalCenter').modal('hide');
+        //5.获取id
+        var ids = new Array();
+        for (var index = 0;index<$(':checkbox:checked').length;index++){
+            $(':checkbox:checked').each(function () {
+                ids.push(getIdOfRow($(this)));
+            });
+        }
+        //6.请求服务器导出
+        location.href = basePath + '/user/export?ids[]='+ids;
+    });
+}
+
 
 /**
  * 获取行的id

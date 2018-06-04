@@ -337,6 +337,33 @@ function batchDeleteItems() {
         );
     });
 }
+/**
+ * 导出用户记录到Excel文档
+ */
+function exportItems() {
+    if($(':checkbox:checked').length==0){
+        alert('请先选择要导出的用户...');
+        return;
+    }
+    //1.设置模态框
+    initModal('导出','确认导出'+$(":checkbox:checked").length+'条记录吗？','取消','确认')
+    //2.显示模态框
+    $('#userModalCenter').modal('show');
+    //3.按钮事件
+    $('#userModalCenter .modal-footer .btn-primary').unbind().click(function () {
+        //4.关闭模态框
+        $('#userModalCenter').modal('hide');
+        //5.获取id
+        var ids = new Array();
+        for (var index = 0;index<$(':checkbox:checked').length;index++){
+            $(':checkbox:checked').each(function () {
+                ids.push(getIdOfRow($(this)));
+            });
+        }
+        //6.请求服务器导出
+        location.href = basePath + '/user/export?ids[]='+ids;
+    });
+}
 
 /**
  * 初始化模态框

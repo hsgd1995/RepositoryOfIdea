@@ -55,9 +55,17 @@
     </div>
     <div class="col-6 align-self-end text-right">
         <ul class="list-inline">
-            <li class="list-inline-item">当前用户:<a href="javascript:alert('${user.username}')">${user.username}</a></li>
+            <li class="list-inline-item dropdown">
+                <button class="btn btn-sm btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="icon-user">${user.loginName}</span>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="javascript:void(0);" onclick="personel(${user.id})">个人中心</a>
+                    <div class="dropdown-driver"></div>
+                    <a class="dropdown-item" href="javascript:void(0);" onclick="logout();">安全退出</a>
+                </div>
+            </li>
             <li class="list-inline-item"><span id="systime">系统时间</span></li>
-            <li class="list-inline-item"><a href="javascript:alert('安全退出')">安全退出</a></li>
         </ul>
     </div>
 </div>
@@ -128,7 +136,7 @@
                     $('.page-wrapper').html("<iframe src='notice' width='100%' height='100%' frameborder='0' name='_blank' id='_blank'></iframe>");
                     break;
                 case '下载中心':
-                    alert('6')
+                    $('.page-wrapper').html("<iframe src='${basePath}/document' width='100%' height='100%' frameborder='0' name='_blank' id='_blank'></iframe>");
                     break;
             }
         });
@@ -161,6 +169,15 @@
                     + date.getHours() + ':' + date.getMinutes() + ':'
                     + date.getSeconds();
         }
+    }
+
+    function logout() {
+        if (confirm('确认退出吗？')){
+            location.href = "${basePath}/logout";
+        }
+    }
+    function personel(id) {
+        $('.page-wrapper').html("<iframe src='${basePath}/personel/"+id+"' width='100%' height='100%' frameborder='0' name='_blank' id='_blank'></iframe>");
     }
 </script>
 </html>

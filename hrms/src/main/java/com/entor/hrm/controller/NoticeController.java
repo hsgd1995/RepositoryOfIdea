@@ -11,8 +11,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import static com.entor.hrm.util.common.HrmConstants.PAGE_DEFAULT_SIZE;
+import static com.entor.hrm.util.common.HrmConstants.USER_SESSION;
 
 /**
  * @Titel:通知
@@ -94,10 +96,11 @@ public class NoticeController {
      * @return
      */
     @RequestMapping("/notice/add")
-    public String add(@ModelAttribute Notice notice,Model model, HttpServletRequest request){
+    public String add(@ModelAttribute Notice notice, Model model, HttpServletRequest request, HttpSession session){
             if ("GET".equalsIgnoreCase(request.getMethod())){
                 return "notice/hrms_notice_add";
             }
+            notice.setUser((User)session.getAttribute(USER_SESSION));
             noticeService.addNotice(notice);
             model.addAttribute(new CommonMessage("添加成功！"));
             return "notice/hrms_notice";
