@@ -1,6 +1,12 @@
 package com.entor.hrm.mapper.provider;
 
+import com.entor.hrm.po.Notice;
+import org.apache.ibatis.jdbc.SQL;
+import org.springframework.util.StringUtils;
+
 import java.util.Map;
+
+import static com.entor.hrm.util.common.HrmConstants.NOTICE_TABLE;
 
 /**
  * 通用SQL构建器

@@ -39,6 +39,7 @@
           <#if commonMessage?exists>
             <p>${commonMessage.message}</p>
           </#if>
+
         <div class="row">
             <div class="col-3">
                 <div class="form-group">

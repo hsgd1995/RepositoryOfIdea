@@ -94,7 +94,7 @@ public class DocumentController {
     @RequestMapping("/document/upload")
     public String upload(@ModelAttribute Document document, Model model, HttpSession session, HttpServletRequest request){
         if("GET".equalsIgnoreCase(request.getMethod())){
-            return "document/hrms_document_upload";
+            return "/document/hrms_document_upload";
         }
         try{
             //上传文档名
@@ -109,11 +109,11 @@ public class DocumentController {
             //保存
             documentService.save(document);
             model.addAttribute(new CommonMessage("上传成功！"));
-            return "document/hrms_document";
+            return "/document/hrms_document";
         }catch (Exception e){
             e.printStackTrace();
             model.addAttribute(new CommonMessage("上传失败!"));
-            return "document/hrms_document";
+            return "/document/hrms_document";
         }
     }
 

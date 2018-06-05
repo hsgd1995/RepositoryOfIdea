@@ -5,6 +5,8 @@ import com.entor.hrm.service.UserService;
 import com.entor.hrm.to.CommonMessage;
 import com.entor.hrm.util.ExcelUtil;
 import org.apache.ibatis.annotations.Param;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -30,6 +32,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    private static Logger LOGGER = LogManager.getLogger();
     /**
      * 在接收页面的值时对值进行处理
      * 绑定数据，将格式为yyyy-MM-dd HH:mm:ss的字符串转成Date类型，使得User中的createDate可以接收数据，
@@ -61,6 +64,7 @@ public class UserController {
         //1.拦截/main的GET请求
         if ("GET".equalsIgnoreCase(request.getMethod())) {
             model.addAttribute(new CommonMessage("请先登录..."));
+            System.out.println("/login 请先登录...");
             return "redirect:index";
         }
         //2.判断当前session是否已经保存用户
@@ -77,7 +81,7 @@ public class UserController {
             return "redirect:main";
         }
         model.addAttribute(new CommonMessage("用户名或密码不匹配!"));
-        return "login";
+        return "/login";
     }
 
     /**
@@ -88,7 +92,7 @@ public class UserController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.removeAttribute(USER_SESSION);
-        return "login";
+        return "/login";
     }
 
     /**
@@ -100,7 +104,7 @@ public class UserController {
     @GetMapping("/personel/{id}")
     public String personel(@PathVariable("id") Integer id,Model model){
         model.addAttribute(userService.getById(id));
-        return "user/hrms_user_center";
+        return "/user/hrms_user_center";
     }
 
     @PostMapping("/personel/edit")
@@ -108,7 +112,7 @@ public class UserController {
         userService.modifyUser(user);
         model.addAttribute("user",userService.getById(user.getId()));
         model.addAttribute(new CommonMessage("修改成功！"));
-        return "user/hrms_user_center";
+        return "/user/hrms_user_center";
     }
 
     /**
@@ -121,7 +125,7 @@ public class UserController {
     @RequestMapping("/main")
     public String main(HttpSession session, Model model) {
         model.addAttribute(session.getAttribute(USER_SESSION));
-        return "hrms_main";
+        return "/hrms_main";
     }
 
     /**
@@ -217,6 +221,7 @@ public class UserController {
     @RequestMapping("/user/update")
     public String update(@ModelAttribute User user, Model model, HttpServletRequest request) {
         if ("GET".equalsIgnoreCase(request.getMethod())) {
+            LOGGER.info("用户id -> {}",user.getId());
             model.addAttribute(userService.getById(user.getId()));
             return "/user/hrms_user_update";
         }

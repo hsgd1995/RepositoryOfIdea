@@ -117,12 +117,12 @@ public class NoticeController {
     public String update(@ModelAttribute Notice notice, Model model, HttpServletRequest request){
         if ("GET".equalsIgnoreCase(request.getMethod())){
             model.addAttribute(noticeService.getById(notice.getId()));
-            return "notice/hrms_notice_update";
+            return "/notice/hrms_notice_update";
         }
 
         noticeService.update(notice);
         model.addAttribute(new CommonMessage("修改成功"));
-        return "notice/hrms_notice";
+        return "/notice/hrms_notice";
     }
 
     /**

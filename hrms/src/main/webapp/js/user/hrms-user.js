@@ -60,6 +60,7 @@ function listHandler(list) {
         //定义每行记录对应的user对象
         //定义行
         var tr = $('<tr></tr>');
+        var id = list[index].id;
         //定义列
         var ck = $('<th scope="row"><input type="checkbox"></th>');
         var th = $('<th scope="row">' + (index + 1) + '</th>');
@@ -67,7 +68,7 @@ function listHandler(list) {
         var loginName = $('<td>' + list[index].loginName + '</td>');
         var username = $('<td>' + list[index].username + '</td>');
         var createDate = $('<td>' + list[index].createDate + '</td>');
-        var operation = '<td><button type="button" class="btn-sm btn-outline-primary" onclick="lookItem(this)">查看</button>';
+        var operation = '<td><button type="button" class="btn-sm btn-outline-primary" onclick="lookItem('+id+')">查看</button>';
         if (list[index].status == 0) {
             operation = operation + '<button type="button" class="btn-sm btn-outline-secondary" onclick="frozeItem(this,1);">解冻</button>';
         } else {
@@ -250,15 +251,14 @@ function addItem() {
 
 /**
  * 查看记录
- * @param that
+ * @param id
  */
-function lookItem(that) {
+function lookItem(id) {
     //1.获得查看行id
-    var userId = getIdOfRow(that);
-    console.log('用户id', userId);
+    console.log('用户id', id);
     //2.加载查看页面
     //2-1.查看页面是请求服务器得到的
-    $(parent.document).find('.page-wrapper').html("<iframe src='" + basePath + "/user/look/" + userId + "' width='100%' height='100%' frameborder='0' name='_blank' id='_blank'></iframe>");
+    $(parent.document).find('.page-wrapper').html("<iframe src='" + basePath + "/user/look/" + id + "' width='100%' height='100%' frameborder='0' name='_blank' id='_blank'></iframe>");
 }
 
 /**
@@ -330,6 +330,7 @@ function batchDeleteItems() {
         }
         //6.请求服务器删除记录
         //此处传递参数可以加入查询条件和分页数据
+        console.log("ids:",ids);
         $.get(basePath+'/user/batchDel',{ids:ids},function (data) {
             //7.显示提示信息
             alert(data.message);
@@ -409,8 +410,9 @@ function exportItems() {
  * @returns {jQuery}
  */
 function getIdOfRow(that) {
-    return $(that).parent().siblings().eq(1).text();
+    return $(that).parent().parent().children().eq(2).text();
 }
+
 
 /**
  * 初始化模态框

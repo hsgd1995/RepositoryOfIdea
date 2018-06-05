@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/font-awesome.css">
+    <link rel="stylesheet" href="${basePath}/css/font-awesome.css">
     <style>
         .container-fluid {
             background: #f7f7f7;
@@ -21,9 +21,34 @@
 <div class="row">
     <div class="col-12">
         <h4 class="border-bottom page-title">职位管理</h4>
+        <input type="hidden" id="basePath" value="${basePath}">
+          <#if commonMessage?exists>
+            <p>${commonMessage.message}</p>
+          </#if>
+        <div class="row">
+            <div class="col-3">
+                <div class="form-group">
+                    <button class="btn btn-sm btn-primary" onclick="addItem();">新增</button>
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="form-group form-row">
+                    <label for="name" class="col-form-label text-right">职位名称:</label>
+                    <div class="col">
+                        <input type="text" class="form-control" id="name" name="name" autocomplete="off">
+                    </div>
+
+                    <div class="col">
+                        <button class="btn btn-sm btn-primary" onclick="query();">查询</button>
+                        <button class="btn btn-sm btn-primary" onclick="reset();">重置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <table class="table table-bordered">
             <thead class="table-dark">
             <tr>
+                <th scope="col"></th>
                 <th scope="col">#</th>
                 <th scope="col">职位ID</th>
                 <th scope="col">职位名称</th>
@@ -32,30 +57,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>
-                    <button type="button" class="btn btn-outline-primary">查看</button>
-                    <button type="button" class="btn btn-outline-secondary">冻结</button>
-                    <button type="button" class="btn btn-outline-success">更新</button>
-                    <button type="button" class="btn btn-outline-danger">删除</button>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-                <td>
-                    <button type="button" class="btn btn-outline-primary">查看</button>
-                    <button type="button" class="btn btn-outline-secondary">冻结</button>
-                    <button type="button" class="btn btn-outline-success">更新</button>
-                    <button type="button" class="btn btn-outline-danger">删除</button>
-                </td>
-            </tr>
+
             </tbody>
         </table>
         <div class="col-12">
@@ -77,21 +79,20 @@
                         </a>
                     </li>
                 </ul>
-                <p class="col-6 text-right">Displaying 1 to 10 14 items.</p>
+                <p class="col-6 text-right" id="displaying">Displaying 0 to 0 page 0 items.</p>
             </div>
         </div>
     </div>
 </div>
 </body>
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
+<script src="${basePath}/js/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
 <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+<script src="${basePath}/js/job/hrms-job.js"></script>
 <script>
     $(function () {
     });

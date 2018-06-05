@@ -20,59 +20,29 @@
 <div class="row">
     <div class="col-12">
         <h4 class="border-bottom page-title">员工管理</h4>
+        <input type="hidden" id="basePath" value="${basePath}">
+          <#if commonMessage?exists>
+            <p>${commonMessage.message}</p>
+          </#if>
         <table class="table table-sm table-bordered">
             <thead class="table-dark">
             <tr>
+                <th scope="col"></th>
                 <th scope="col">#</th>
+                <th scope="col">员工ID</th>
                 <th scope="col">工号</th>
                 <th scope="col">姓名</th>
-                <th scope="col">性别</th>
                 <th scope="col">年龄</th>
+                <th scope="col">性别</th>
+                <th scope="col">手机号码</th>
                 <th scope="col">生日</th>
-                <th scope="col">民族</th>
-                <th scope="col">学历</th>
-                <th scope="col">政治面貌</th>
-                <th scope="col">备注</th>
+                <th scope="col">职位</th>
+                <th scope="col">部门</th>
                 <th scope="col">操作</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>
-                    <button type="button" class="btn btn-sm btn-outline-primary btn-small">查看</button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary">冻结</button>
-                    <button type="button" class="btn btn-sm btn-outline-success">更新</button>
-                    <button type="button" class="btn btn-sm btn-outline-danger">删除</button>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>
-                    <button type="button" class="btn btn-sm btn-outline-primary">查看</button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary">冻结</button>
-                    <button type="button" class="btn btn-sm btn-outline-success">更新</button>
-                    <button type="button" class="btn btn-sm btn-outline-danger">删除</button>
-                </td>
-            </tr>
+
             </tbody>
         </table>
         <div class="col-12">
@@ -94,21 +64,20 @@
                         </a>
                     </li>
                 </ul>
-                <p class="col-6 text-right">Displaying 1 to 10 14 items.</p>
+                <p class="col-6 text-right" id="displaying">Displaying 0 to 0 page 0 items.</p>
             </div>
         </div>
     </div>
 </div>
 </body>
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
+<script src="${basePath}/js/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
 <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+<script src="${basePath}/js/emp/hrms-emp.js"></script>
 <script>
     $(function () {
     });

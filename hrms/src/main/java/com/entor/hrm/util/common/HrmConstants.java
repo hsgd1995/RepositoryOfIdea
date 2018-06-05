@@ -12,6 +12,16 @@ public class HrmConstants {
     public static final String NOTICE_TABLE = "notice_inf";
     public static final String DOCUMENT_TABLE = "document_inf";
 
+    /* Map<String,Object>中每个实体对应的key*/
+    public static final String USER_MAP = "user";
+    public static final String NOTICE_MAP = "notice";
+    public static final String DOCUMENT_MAP = "document";
+    public static final String DEPARTMENT_MAP = "department";
+    public static final String JOB_MAP = "job";
+    public static final String EMPLOYEE_MAP = "employee";
+
+    public static final String PAGEMODEL = "pageModel";
+
     /* 登录页面 */
     public static final String LOGIN = "loginForm";
     /* 用户session属性名 */
