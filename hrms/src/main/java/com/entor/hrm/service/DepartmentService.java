@@ -3,6 +3,8 @@ package com.entor.hrm.service;
 import com.entor.hrm.po.Department;
 import com.entor.hrm.service.impl.PageModel;
 
+import java.util.List;
+
 /**
  * @Titel:
  * @Description:
@@ -19,6 +21,11 @@ public interface DepartmentService {
      */
     PageModel<Department> getByPage(Department department, Integer pageIndex, Integer pageSize);
 
+    /**
+     * 获取全部部门
+     * @return
+     */
+    List<Department> getAll();
 
     /**
      * 根据id获取部门信息

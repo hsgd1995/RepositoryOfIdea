@@ -55,4 +55,7 @@ public interface DepartmentMapper {
 
     @InsertProvider(type = DepartmentDynaSQLProvider.class,method = "save")
     void save(Department department);
+
+    @Select("select * from "+DEPT_TABLE + " where 1=1")
+    List<Department> selectAll();
 }

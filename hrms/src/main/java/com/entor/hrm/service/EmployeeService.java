@@ -3,6 +3,8 @@ package com.entor.hrm.service;
 import com.entor.hrm.po.Employee;
 import com.entor.hrm.service.impl.PageModel;
 
+import java.util.List;
+
 /**
  * @Titel:
  * @Description:
@@ -24,4 +26,36 @@ public interface EmployeeService {
      * @param id
      */
     void removeEmp(Integer id);
+
+    /**
+     * 添加员工
+     * @param employee
+     */
+    void addEmp(Employee employee);
+
+    /**
+     * 根据id获取实体
+     * @param id
+     * @return
+     */
+    Employee getById(Integer id);
+
+    /**
+     * 修改员工
+     * @param employee
+     */
+    void modifyEmp(Employee employee);
+
+    /**
+     * 批量删除
+     * @param ids
+     */
+    void batchRemoveUser(Integer[] ids);
+
+    /**
+     * 根据id获取多条记录
+     * @param ids
+     * @return
+     */
+    List<Employee> getByIds(Integer[] ids);
 }

@@ -24,6 +24,39 @@
           <#if commonMessage?exists>
             <p>${commonMessage.message}</p>
           </#if>
+        <div class="row">
+            <div class="col-2">
+                <div class="form-group">
+                    <button class="btn btn-sm btn-primary" onclick="addItem();">新增</button>
+                    <button class="btn btn-sm btn-danger" onclick="batchDeleteItems();">批量删除</button>
+                    <button class="btn btn-sm btn-success" onclick="exportItems();">导出Excel</button>
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="form-group form-row">
+                    <label for="name" class="col-form-label text-right">姓名:</label>
+                    <div class="col">
+                        <input type="text" class="form-control" id="name" name="name" autocomplete="off">
+                    </div>
+                    <label for="name" class="col-form-label text-right">职位:</label>
+                    <div class="col">
+                        <select class="form-control" id="job.id" name="job.id">
+                            <option value="">请选择职位...</option>
+                        </select>
+                    </div>
+                    <label for="name" class="col-form-label text-right">职位:</label>
+                    <div class="col">
+                        <select class="form-control" id="department.id" name="department.id">
+                            <option value="">请选中部门...</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-sm btn-primary" onclick="query();">查询</button>
+                        <button class="btn btn-sm btn-primary" onclick="reset();">重置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <table class="table table-sm table-bordered">
             <thead class="table-dark">
             <tr>
@@ -65,6 +98,26 @@
                     </li>
                 </ul>
                 <p class="col-6 text-right" id="displaying">Displaying 0 to 0 page 0 items.</p>
+            </div>
+        </div>
+    </div>
+    <!-- 模态框 -->
+    <div class="modal fade" id="userModalCenter" tabindex="-1" role="dialog"
+         aria-labelledby="userModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userModalLongTitle">标题</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary">保存修改</button>
+                </div>
             </div>
         </div>
     </div>

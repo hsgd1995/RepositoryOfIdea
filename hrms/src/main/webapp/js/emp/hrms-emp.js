@@ -8,6 +8,33 @@ $(function () {
     $.get(basePath + '/emp/list', function (data) {
         dataHandler(data);
     }, 'json');
+
+    //搜索框加载列表
+    //加载部门列表
+    $.get(basePath + '/dept/list', {pageIndex: 1, pageSize: 100}, function (data) {
+
+        //获取标签元素
+        var obj = document.getElementById("department.id");
+
+        var list = data.pageList;
+        for (var index = 0; index < list.length; index++) {
+            //添加一个选项
+            obj.add(new Option(list[index].name, list[index].id));
+        }
+    }, 'json');
+
+    //加载职位列表
+    $.get(basePath + '/job/list', {pageIndex: 1, pageSize: 100}, function (data) {
+
+        //获取标签元素
+        var obj = document.getElementById("job.id");
+
+        var list = data.pageList;
+        for (var index = 0; index < list.length; index++) {
+            //添加一个选项
+            obj.add(new Option(list[index].name, list[index].id));
+        }
+    }, 'json');
 });
 
 /**
@@ -50,7 +77,6 @@ function listHandler(list) {
     for (var index = 0; index < list.length; index++) {
         // 定义每行记录对应的emp对象
         // 定义行
-        console.log("拼接表格标签");
         var tr = $('<tr></tr>');
         var id = list[index].id;
         // 定义列
@@ -60,9 +86,12 @@ function listHandler(list) {
         var cardId = $('<td>' + list[index].cardId + '</td>');
         var name = $('<td>' + list[index].name + '</td>');
         var age = $('<td>' + list[index].age + '</td>');
-        var sex = $('<td>' + list[index].sex + '</td>');
+
+        var empSex =list[index].sex==0?'男':'女';
+
+        var sex = $('<td>' + empSex + '</td>');
         var tel = $('<td>' + list[index].tel + '</td>');
-        var birthday = $('<td>' + list[index].birthday + '</td>');
+        var birthday = $('<td>' + list[index].birthday.substring(0,10) + '</td>');
         var job = $('<td>' + list[index].job.name + '</td>');
         var dept = $('<td>' + list[index].department.name + '</td>');
         var operation = '<td><button type="button" class="btn-sm btn-outline-primary" onclick="lookItem('+id+');">查看</button>';
@@ -211,8 +240,165 @@ function currPage(that, pageSize) {
     }, 'json');
 }
 
+/**
+ * 查询
+ */
+function query() {
+    var name = $('#name').val();
+    //由于职位下拉框是用dom方式添加，$('department.id')会取不到值
+    var jobId = $(document.getElementById("job.id")).val();
+    //由于部门下拉框是用dom方式添加，$('department.id')会取不到值
+    var deptId = $(document.getElementById("department.id")).val();
+
+    console.log("查询条件：name:"+name+",jobId:"+jobId+",deptId:"+deptId);
+    $.get(basePath+'/emp/list',{name:name,jobId:jobId,deptId:deptId},function (data) {
+        dataHandler(data);
+    },'json');
+}
+
+function reset() {
+    $.get(basePath+'/emp/list',function (data) {
+        dataHandler(data);
+    },'json');
+}
+
+/**
+ * 导出Excel
+ */
+function exportItems() {
+    if($(":checkbox:checked").length==0){
+        alert('请先选择要导出的员工...');
+        return;
+    }
+    //1.设置模态框
+    initModal('导出','确认导出'+$(":checkbox:checked").length+'条记录吗？','取消','确认')
+    //2.显示模态框
+    $('#userModalCenter').modal('show');
+    //3.按钮事件
+    $('#userModalCenter .modal-footer .btn-primary').unbind().click(function () {
+        //4.关闭模态框
+        $('#userModalCenter').modal('hide');
+        //5.获取id
+        var ids = new Array();
+        for (var index = 0;index<$(':checkbox:checked').length;index++){
+            $(':checkbox:checked').each(function () {
+                ids.push(getIdOfRow($(this)));
+            });
+        }
+        //6.请求服务器删除记录
+        //此处传递参数可以加入查询条件和分页数据
+        console.log("ids:",ids);
+        location.href = basePath + '/emp/export?ids[]='+ids;
+
+    });
+}
+
+
+/**
+ * 删除
+ * @param id
+ */
 function deleteItem(id) {
     if(confirm('确认删除吗？')){
-        $(parent.document).find('.page-wrapper').html("<iframe src='" + basePath + "/emp/del?id=" + id + "' width='100%' height='100%' frameborder='0' name='_blank' id='_blank'></iframe>");
+        $.get(basePath +'/emp/del?id='+id,function (data) {
+            alert(data.message);
+            $.getJSON(basePath + '/emp/list', {employee: null, pageIndex: 1, pageSize: 4}, function (data) {
+                dataHandler(data);
+            });
+        });
     }
+}
+
+/**
+ * 批量删除
+ */
+function batchDeleteItems() {
+
+    if($(":checkbox:checked").length==0){
+        alert('请先选择要删除的员工...');
+        return;
+    }
+    //1.设置模态框
+    initModal('删除','确认删除'+$(":checkbox:checked").length+'条记录吗？','取消','确认')
+    //2.显示模态框
+    $('#userModalCenter').modal('show');
+    //3.按钮事件
+    $('#userModalCenter .modal-footer .btn-primary').unbind().click(function () {
+        //4.关闭模态框
+        $('#userModalCenter').modal('hide');
+        //5.获取id
+        var ids = new Array();
+        for (var index = 0;index<$(':checkbox:checked').length;index++){
+            $(':checkbox:checked').each(function () {
+                ids.push(getIdOfRow($(this)));
+            });
+        }
+        //6.请求服务器删除记录
+        //此处传递参数可以加入查询条件和分页数据
+        console.log("ids:",ids);
+        $.get(basePath+'/emp/batchDel',{ids:ids},function (data) {
+            //7.显示提示信息
+            alert(data.message);
+            //8.刷新记录
+            $.get(basePath+'/emp/list',{employee:null,pageIndex:1,pageSize:4},function (listData) {
+                dataHandler(listData);
+            });
+        },'json');
+    });
+}
+
+/**
+ * 添加
+ */
+function addItem() {
+    $(parent.document).find('.page-wrapper').html("<iframe src='" + basePath + "/emp/add' width='100%' height='100%' frameborder='0' name='_blank' id='_blank'></iframe>");
+
+}
+
+/**
+ * 查看
+ * @param id
+ */
+function lookItem(id) {
+    $(parent.document).find('.page-wrapper').html("<iframe src='" + basePath + "/emp/look/ "+id+"' width='100%' height='100%' frameborder='0' name='_blank' id='_blank'></iframe>");
+
+}
+
+function updateItem(id) {
+    $(parent.document).find('.page-wrapper').html("<iframe src='" + basePath + "/emp/update?id="+id+"' width='100%' height='100%' frameborder='0' name='_blank' id='_blank'></iframe>");
+
+}
+
+/**
+ * 获取行的id
+ * @param that
+ * @returns {jQuery}
+ */
+function getIdOfRow(that) {
+    return $(that).parent().parent().children().eq(2).text();
+}
+
+
+
+/**
+ * 初始化模态框
+ * @param title
+ * @param body
+ * @param btn1
+ * @param btn2
+ */
+function initModal(title, body, btn1, btn2) {
+    //标题
+    $('#userModalCenter .modal-title').text(title);
+    //内容
+    $('#userModalCenter .modal-body').text(body);
+    //按钮
+    if (btn1)
+        $('#userModalCenter .modal-footer .btn-secondary').text(btn1);
+    if (btn2)
+        $('#userModalCenter .modal-footer .btn-primary').text(btn2);
+    if (!btn1 && btn2)
+        $('userModalCenter .modal-footer').hide();
+    else
+        $('#userModalCenter .modal-footer').show();
 }

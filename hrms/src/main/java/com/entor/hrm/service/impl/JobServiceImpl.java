@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.entor.hrm.util.common.HrmConstants.JOB_MAP;
@@ -47,6 +48,11 @@ public class JobServiceImpl implements JobService{
             pageModel.setPageList(jobMapper.selectByPage(params));
         }
         return pageModel;
+    }
+
+    @Override
+    public List<Job> getAll() {
+        return jobMapper.selectAll();
     }
 
     @Transactional(readOnly = true)

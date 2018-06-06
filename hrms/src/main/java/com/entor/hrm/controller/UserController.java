@@ -107,6 +107,12 @@ public class UserController {
         return "/user/hrms_user_center";
     }
 
+    /**
+     * 更新
+     * @param user
+     * @param model
+     * @return
+     */
     @PostMapping("/personel/edit")
     public String personel(@ModelAttribute User user,Model model){
         userService.modifyUser(user);
@@ -250,6 +256,11 @@ public class UserController {
         return "/user/hrms_user";
     }
 
+    /**
+     * 导出Excel
+     * @param ids
+     * @param response
+     */
     @RequestMapping("/user/export")
     public void export(@RequestParam("ids[]") Integer[] ids, HttpServletResponse response) {
         for (Integer id : ids) {
@@ -259,6 +270,7 @@ public class UserController {
             //1.准备集合
             List<User> list = userService.getByIds(ids);
 
+            System.out.println("导出记录数："+list.size());
             //2.准备标题
             Map<String, String> titles = new HashMap<>();
             titles.put("id", "用户ID");

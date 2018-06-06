@@ -53,4 +53,7 @@ public interface JobMapper {
 
     @InsertProvider(type = JobDynaSQLProvider.class,method = "save")
     void save(Job job);
+
+    @Select("select * from "+JOB_TABLE+" where 1=1")
+    List<Job> selectAll();
 }

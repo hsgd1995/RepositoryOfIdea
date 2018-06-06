@@ -3,6 +3,8 @@ package com.entor.hrm.service;
 import com.entor.hrm.po.Job;
 import com.entor.hrm.service.impl.PageModel;
 
+import java.util.List;
+
 /**
  * @Titel:
  * @Description:
@@ -18,6 +20,13 @@ public interface JobService {
      * @return PageModel<Notice>
      */
     PageModel<Job> getByPage(Job job, Integer pageIndex, Integer pageSize);
+
+
+    /**
+     * 获取全部职位
+     * @return
+     */
+    List<Job> getAll();
 
 
     /**

@@ -1,6 +1,7 @@
 package com.entor.hrm.service.impl;
 
 import com.entor.hrm.mapper.EmployeeMapper;
+import com.entor.hrm.po.Department;
 import com.entor.hrm.po.Employee;
 import com.entor.hrm.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.entor.hrm.util.common.HrmConstants.EMPLOYEE_MAP;
@@ -57,5 +59,35 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void removeEmp(Integer id) {
         employeeMapper.deleteById(id);
+    }
+
+    @Override
+    public void addEmp(Employee employee) {
+
+        employeeMapper.save(employee);
+    }
+
+    @Override
+    public Employee getById(Integer id) {
+        return employeeMapper.selectById(id);
+    }
+
+    @Override
+    public void modifyEmp(Employee employee) {
+        employeeMapper.update(employee);
+    }
+
+    @Override
+    public void batchRemoveUser(Integer[] ids) {
+        Map<String ,Object> params = new HashMap<>();
+        params.put("ids",ids);
+        employeeMapper.batchDel(params);
+    }
+
+    @Override
+    public List<Employee> getByIds(Integer[] ids) {
+        Map<String,Object> params = new HashMap<>();
+        params.put("ids",ids);
+        return employeeMapper.selectByIds(params);
     }
 }

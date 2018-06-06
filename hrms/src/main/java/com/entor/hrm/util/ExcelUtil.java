@@ -1,5 +1,7 @@
 package com.entor.hrm.util;
 
+import com.entor.hrm.po.Department;
+import com.entor.hrm.po.Job;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.hssf.usermodel.*;
@@ -61,8 +63,23 @@ public class ExcelUtil<T> {
                     String filedName = (String) properties[j];
                     Field property = clazz.getDeclaredField(filedName);
                     Type type = property.getType();
-                    Method method = clazz.getMethod("get" + filedName.substring(0, 1).toUpperCase() + filedName.substring(1), null);
-                    Object value = method.invoke(t, null);
+                    Method method = null;
+                    Object value = null;
+                    if("department".equals(filedName)){
+                         method = clazz.getMethod("get" + filedName.substring(0, 1).toUpperCase() + filedName.substring(1), null);
+                         value = method.invoke(t, null);
+                        value = ((Department)value).getName();
+                    }else if ("job".equals(filedName)){
+                        method = clazz.getMethod("get" + filedName.substring(0, 1).toUpperCase() + filedName.substring(1), null);
+                        value = method.invoke(t, null);
+                        value = ((Job)value).getName();
+                    } else {
+
+                         method = clazz.getMethod("get" + filedName.substring(0, 1).toUpperCase() + filedName.substring(1), null);
+                         value = method.invoke(t, null);
+                    }
+
+
                     if (value instanceof java.util.Date)
                         hssfRow.createCell(j).setCellValue(sdf.format(value));
                     else if (value instanceof String)

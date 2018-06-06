@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.entor.hrm.util.common.HrmConstants.DEPARTMENT_MAP;
@@ -47,6 +48,12 @@ public class DepartmentServiceImpl implements DepartmentService {
             pageModel.setPageList(departmentMapper.selectByPage(params));
         }
         return pageModel;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Department> getAll() {
+        return departmentMapper.selectAll();
     }
 
     @Transactional(readOnly = true)
