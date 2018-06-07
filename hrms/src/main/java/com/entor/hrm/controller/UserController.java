@@ -61,10 +61,10 @@ public class UserController {
      */
     @RequestMapping("/login")
     public String login(@ModelAttribute User user, Model model, HttpServletRequest request, HttpSession session) {
+        try {
         //1.拦截/main的GET请求
         if ("GET".equalsIgnoreCase(request.getMethod())) {
             model.addAttribute(new CommonMessage("请先登录..."));
-            System.out.println("/login 请先登录...");
             return "redirect:index";
         }
         //2.判断当前session是否已经保存用户
@@ -74,18 +74,24 @@ public class UserController {
 
         //3.根据登录名和密码查找用户
         System.out.println("loginName:" + user.getLoginName() + ",password:" + user.getPassword());
-        user = userService.findByLoginNameAndPassword(user.getLoginName(), user.getPassword());
+
+            user = userService.findByLoginNameAndPassword(user.getLoginName(), user.getPassword());
+
         if (user != null) {
             model.addAttribute(user);
             session.setAttribute(USER_SESSION, user);
             return "redirect:main";
         }
         model.addAttribute(new CommonMessage("用户名或密码不匹配!"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return "/login";
     }
 
     /**
      * 退出登录
+     *
      * @param session
      * @return
      */
@@ -97,26 +103,28 @@ public class UserController {
 
     /**
      * 个人中心
+     *
      * @param id
      * @param model
      * @return
      */
     @GetMapping("/personel/{id}")
-    public String personel(@PathVariable("id") Integer id,Model model){
+    public String personel(@PathVariable("id") Integer id, Model model) {
         model.addAttribute(userService.getById(id));
         return "/user/hrms_user_center";
     }
 
     /**
      * 更新
+     *
      * @param user
      * @param model
      * @return
      */
     @PostMapping("/personel/edit")
-    public String personel(@ModelAttribute User user,Model model){
+    public String personel(@ModelAttribute User user, Model model) {
         userService.modifyUser(user);
-        model.addAttribute("user",userService.getById(user.getId()));
+        model.addAttribute("user", userService.getById(user.getId()));
         model.addAttribute(new CommonMessage("修改成功！"));
         return "/user/hrms_user_center";
     }
@@ -209,7 +217,7 @@ public class UserController {
     @GetMapping("/user/look/{id}")
     public String look(@PathVariable("id") Integer id, Model model) {
         User user = userService.getById(id);
-        user.setCreateDate(new java.sql.Date(user.getCreateDate().getTime()));
+        //user.setCreateDate(new java.sql.Date(user.getCreateDate().getTime()));
         //将实体存到model中，用于页面获取user,页面默认取值方式为${user.loginName};
         model.addAttribute(user);
         return "/user/hrms_user_look";
@@ -227,11 +235,10 @@ public class UserController {
     @RequestMapping("/user/update")
     public String update(@ModelAttribute User user, Model model, HttpServletRequest request) {
         if ("GET".equalsIgnoreCase(request.getMethod())) {
-            LOGGER.info("用户id -> {}",user.getId());
+            LOGGER.info("用户id -> {}", user.getId());
             model.addAttribute(userService.getById(user.getId()));
             return "/user/hrms_user_update";
         }
-        System.out.println("更新的用户：" + user);
         userService.modifyUser(user);
         model.addAttribute(new CommonMessage("修改成功！"));
         return "/user/hrms_user";
@@ -258,19 +265,20 @@ public class UserController {
 
     /**
      * 导出Excel
+     *
      * @param ids
      * @param response
      */
     @RequestMapping("/user/export")
     public void export(@RequestParam("ids[]") Integer[] ids, HttpServletResponse response) {
         for (Integer id : ids) {
-            System.out.println("id:" + id);
+            System.out.println("UserController - export - id:" + id);
         }
         try {
             //1.准备集合
             List<User> list = userService.getByIds(ids);
 
-            System.out.println("导出记录数："+list.size());
+            System.out.println("导出记录数：" + list.size());
             //2.准备标题
             Map<String, String> titles = new HashMap<>();
             titles.put("id", "用户ID");

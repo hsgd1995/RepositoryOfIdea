@@ -14,6 +14,7 @@ $(function () {
     //第一次加载页面，需要首页数据
     $.get(basePath + '/user/list', {user: null, pageIndex: 1, pageSize: 4}, function (data) {
         dataHandler(data);
+        console.log(data);
     }, 'json');
 });
 

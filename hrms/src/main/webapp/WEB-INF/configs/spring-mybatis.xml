@@ -13,7 +13,7 @@
     <!-- 加载jdbc属性列表 -->
     <context:property-placeholder location="/WEB-INF/configs/jdbc.properties"/>
 
-    <!-- 配置dbcp2数据源 -->
+    <!-- 配置dbcp2连接池的数据源 -->
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
         <property name="driverClassName" value="${jdbc.driverClass}"/>
         <property name="url" value="${jdbc.url}"/>

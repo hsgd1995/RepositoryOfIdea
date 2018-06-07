@@ -10,6 +10,8 @@
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
+    <!-- springMVC -->
+
     <!-- 组件扫描(主要扫描controller层的@Controller注解) -->
     <context:component-scan base-package="com.entor.hrm.controller">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
@@ -66,7 +68,6 @@
             <bean class="com.entor.hrm.interceptor.AuthorizedInterceptor"></bean>
         </mvc:interceptor>
     </mvc:interceptors>
-
     <!-- 配置日期格式转换器 -->
     <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
         <property name="converters">

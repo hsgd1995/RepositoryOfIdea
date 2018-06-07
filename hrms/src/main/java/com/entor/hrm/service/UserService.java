@@ -3,6 +3,8 @@ package com.entor.hrm.service;
 import com.entor.hrm.po.User;
 import com.entor.hrm.service.impl.PageModel;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 /**
@@ -76,7 +78,7 @@ public interface UserService {
      * @param password
      * @return
      */
-    User findByLoginNameAndPassword(String loginName, String password);
+    User findByLoginNameAndPassword(String loginName, String password) throws NoSuchAlgorithmException, UnsupportedEncodingException;
 
     /**
      * 获取多个id对应的记录

@@ -121,7 +121,7 @@ public class DocumentController {
     @ResponseBody
     public Object batchDel(@RequestParam("ids[]") Integer[] ids){
         for (Integer integer : ids) {
-            System.out.println("id:"+integer);
+            System.out.println("document - batchDel - id:"+integer);
         }
         documentService.batchRemoveDocument(ids);
         return new CommonMessage("批量删除成功！");

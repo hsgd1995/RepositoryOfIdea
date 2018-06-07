@@ -24,6 +24,13 @@ public interface UserMapper {
     })
     User selectById(Integer id);
 
+    @Select("select * from "+USER_TABLE+" where login_name = #{loginName}")
+    @Results({
+            @Result(column = "login_name", property = "loginName", javaType = java.lang.String.class),
+            @Result(column = "create_date", property = "createDate", javaType = java.util.Date.class)
+    })
+    User selectByLoginName(String loginName);
+
     /**
      * 查询所有记录
      *

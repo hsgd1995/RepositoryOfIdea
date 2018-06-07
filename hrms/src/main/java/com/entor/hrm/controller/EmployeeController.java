@@ -58,7 +58,6 @@ public class EmployeeController {
             department.setId(deptId);
             employee.setDepartment(department);
         }
-        System.out.println("查询条件："+employee);
         return employeeService.getByPage(employee,pageIndex,pageSize);
     }
 
@@ -92,10 +91,12 @@ public class EmployeeController {
     @RequestMapping("/emp/add")
     public String add(@ModelAttribute Employee employee, Model model, HttpServletRequest request){
         if ("GET".equalsIgnoreCase(request.getMethod())){
+
+
+
             return "/emp/hrms_emp_add";
         }
 
-        System.out.println("添加的员工："+employee);
         employeeService.addEmp(employee);
         model.addAttribute("添加成功");
         return "/emp/hrms_emp";

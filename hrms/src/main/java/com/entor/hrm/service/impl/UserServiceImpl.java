@@ -3,10 +3,9 @@ package com.entor.hrm.service.impl;
 import com.entor.hrm.mapper.UserMapper;
 import com.entor.hrm.po.User;
 import com.entor.hrm.service.UserService;
+import com.entor.hrm.util.EncryptUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
@@ -26,7 +25,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByLoginNameAndPassword(String loginName, String password) {
-        return userMapper.selectByLoginNameAndPassword(loginName,password);
+        EncryptUtil encryptUtil = null;
+        User user = null;
+        try {
+            encryptUtil = new EncryptUtil();
+            user = userMapper.selectByLoginName(loginName);
+            System.out.println("从数据库中获取的密码："+user.getPassword());
+            if (!encryptUtil.convert(user.getPassword()).equals(password)){
+                //如果从数据库查出的密码和输入的密码不一样，则返回null
+                user = null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            user = null;
+        }
+        return user;
     }
 
     @Transactional(readOnly = true)
@@ -43,7 +56,7 @@ public class UserServiceImpl implements UserService {
         params.put("user", user);
         // 根据检索条件查询记录总数
         int recordCount = userMapper.count(params);
-        System.out.println("按条件查询的结果记录数："+recordCount);
+        System.out.println("按条件查询的结果记录数：" + recordCount);
         // 整理分页参数
         PageModel<User> pageModel = new PageModel<User>();
         System.out.println("pageModel ->" + pageModel);
@@ -66,6 +79,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void save(User user) {
+        try {
+            EncryptUtil encryptUtil = new EncryptUtil();
+            user.setPassword(encryptUtil.convert(user.getPassword()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         userMapper.insert(user);
     }
 
@@ -90,13 +109,24 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     @Override
     public User getById(Integer id) {
-        return userMapper.selectById(id);
+        User user = new User();
+        try {
+            EncryptUtil encryptUtil = new EncryptUtil();
+            user = userMapper.selectById(id);
+            String password = encryptUtil.convert(user.getPassword());
+            System.out.println("解密后的密码："+password);
+            user.setPassword(password);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return user;
     }
 
     @Override
     public List<User> getByIds(Integer[] ids) {
-        Map<String,Object> params = new HashMap<>();
-        params.put("ids",ids);
+        Map<String, Object> params = new HashMap<>();
+        params.put("ids", ids);
         return userMapper.selectByIds(params);
     }
 }
