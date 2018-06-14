@@ -114,4 +114,6 @@ public interface UserMapper {
             @Result(column = "create_date",property = "createDate",javaType = java.util.Date.class)
     })
     List<User> selectByIds(Map<String,Object> params);
+
+    void batchInsertUser(List<User> userList);
 }

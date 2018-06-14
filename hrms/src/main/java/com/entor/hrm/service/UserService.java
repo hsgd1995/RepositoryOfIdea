@@ -2,7 +2,9 @@ package com.entor.hrm.service;
 
 import com.entor.hrm.po.User;
 import com.entor.hrm.service.impl.PageModel;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -86,4 +88,11 @@ public interface UserService {
      * @return
      */
     List<User> getByIds(Integer[] ids);
+
+    /**
+     * 批量导入用户
+     * @param in
+     * @param OriginalFilename
+     */
+    void batchAddUser(InputStream in, String OriginalFilename);
 }

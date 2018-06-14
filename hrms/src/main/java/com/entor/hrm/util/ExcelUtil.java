@@ -65,17 +65,15 @@ public class ExcelUtil<T> {
                     Type type = property.getType();
                     Method method = null;
                     Object value = null;
+                    method = clazz.getMethod("get" + filedName.substring(0, 1).toUpperCase() + filedName.substring(1), null);
                     if("department".equals(filedName)){
-                         method = clazz.getMethod("get" + filedName.substring(0, 1).toUpperCase() + filedName.substring(1), null);
                          value = method.invoke(t, null);
                         value = ((Department)value).getName();
                     }else if ("job".equals(filedName)){
-                        method = clazz.getMethod("get" + filedName.substring(0, 1).toUpperCase() + filedName.substring(1), null);
                         value = method.invoke(t, null);
                         value = ((Job)value).getName();
                     } else {
 
-                         method = clazz.getMethod("get" + filedName.substring(0, 1).toUpperCase() + filedName.substring(1), null);
                          value = method.invoke(t, null);
                     }
 

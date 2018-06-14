@@ -46,7 +46,7 @@ public class EmployeeDynaSQLProvider {
     }
 
     /**
-     * 动态查询通知总记录数
+     * 动态查询员工总记录数
      *
      * @param params
      * @return

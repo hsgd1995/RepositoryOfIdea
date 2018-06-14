@@ -4,10 +4,14 @@ import com.entor.hrm.mapper.UserMapper;
 import com.entor.hrm.po.User;
 import com.entor.hrm.service.UserService;
 import com.entor.hrm.util.EncryptUtil;
+import com.entor.hrm.util.ExcelUtil2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +34,8 @@ public class UserServiceImpl implements UserService {
         try {
             encryptUtil = new EncryptUtil();
             user = userMapper.selectByLoginName(loginName);
-            System.out.println("从数据库中获取的密码："+user.getPassword());
-            if (!encryptUtil.convert(user.getPassword()).equals(password)){
+            System.out.println("从数据库中获取的密码：" + user.getPassword());
+            if (!encryptUtil.convert(user.getPassword()).equals(password)) {
                 //如果从数据库查出的密码和输入的密码不一样，则返回null
                 user = null;
             }
@@ -114,7 +118,7 @@ public class UserServiceImpl implements UserService {
             EncryptUtil encryptUtil = new EncryptUtil();
             user = userMapper.selectById(id);
             String password = encryptUtil.convert(user.getPassword());
-            System.out.println("解密后的密码："+password);
+            System.out.println("解密后的密码：" + password);
             user.setPassword(password);
         } catch (Exception e) {
             e.printStackTrace();
@@ -128,5 +132,34 @@ public class UserServiceImpl implements UserService {
         Map<String, Object> params = new HashMap<>();
         params.put("ids", ids);
         return userMapper.selectByIds(params);
+    }
+
+    @Override
+    public void batchAddUser(InputStream in, String OriginalFilename) {
+        List<User> userList = new ArrayList<>();
+        try {
+            //工作簿列表
+            List<List<Object>> listob = ExcelUtil2.getBankListByExcel(in, OriginalFilename);
+
+            for (int i = 0; i < listob.size(); i++) {
+                //行列表
+                List<Object> ob = listob.get(i);
+                System.out.println("ob:"+ob);
+
+                User user = new User();
+                //user = (User) ob;
+                user.setLoginName(String.valueOf(ob.get(1)));
+                user.setPassword(String.valueOf(ob.get(2)));
+                user.setStatus(Integer.parseInt((String) ob.get(3)));
+                user.setUsername(String.valueOf(ob.get(5)));
+                System.out.println("i循环结束："+i);
+                userList.add(user);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        for (User user:userList){
+            userMapper.insert(user);
+        }
     }
 }

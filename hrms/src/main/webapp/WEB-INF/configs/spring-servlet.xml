@@ -16,7 +16,7 @@
     <context:component-scan base-package="com.entor.hrm.controller">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
-    <!-- mvc注解驱动 -->
+    <!-- mvc注解驱动,同时加入转换器，为页面传到后台的数据作格式转换 -->
     <mvc:annotation-driven conversion-service="conversionService"/>
 
 

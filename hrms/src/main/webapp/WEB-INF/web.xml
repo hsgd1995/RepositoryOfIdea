@@ -15,6 +15,10 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
+    <!-- 自定义监听器 -->
+    <listener>
+        <listener-class>com.entor.hrm.util.MyListener</listener-class>
+    </listener>
     <!-- 上下文配置 -->
     <context-param>
         <param-name>contextConfigLocation</param-name>

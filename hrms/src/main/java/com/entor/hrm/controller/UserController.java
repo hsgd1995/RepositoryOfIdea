@@ -13,10 +13,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -260,6 +263,28 @@ public class UserController {
         userService.save(user);
         //将实体存到model中，用于页面获取user,页面默认取值方式为实体首字母小写${commonMessage},取该实体属性使用${commonMessage.message};
         model.addAttribute(new CommonMessage("添加成功！"));
+        return "/user/hrms_user";
+    }
+
+    /**
+     * 导入Excel，
+     * @param request
+     */
+    @RequestMapping("/user/importExcel")
+    public String importExcel(HttpServletRequest request, Model model){
+        try {
+            int adminId = 1;
+            //获取上传的文件
+            MultipartHttpServletRequest multipart = (MultipartHttpServletRequest) request;
+            MultipartFile file = multipart.getFile("file");
+            InputStream in = file.getInputStream();
+            //数据导入
+            userService.batchAddUser(in, file.getOriginalFilename());
+            in.close();
+            model.addAttribute(new CommonMessage("修改成功！"));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return "/user/hrms_user";
     }
 

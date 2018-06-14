@@ -11,6 +11,7 @@ import static com.entor.hrm.util.common.HrmConstants.USER_SESSION;
 
 /**
  * 权限访问拦截器
+ * 若请求中包含index或login,允许访问，否则判断用户是否已登录，若已登录则允许访问，若未登录则跳到登录页面
  */
 public class AuthorizedInterceptor implements HandlerInterceptor {
 
