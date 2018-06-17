@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!-- springMVC -->
+    
+    <!-- 组件扫描，扫描controller层的@Controller注解 -->
+    <context:component-scan base-package="me.tang.hsgd.controller">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!-- mvc注解驱动，同时加入转换器，为页面传到后台的数据作格式转换 -->
+    <mvc:annotation-driven conversion-service="conversionService"/>
+    <!-- 配置日期格式转换器 -->
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="converters">
+            <list>
+                <bean class="me.tang.hsgd.converter.DateConverter"></bean>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 静态资源，用于页面上加载静态资源时不被拦截 -->
+    <mvc:resources mapping="/css/**" location="/css/"/>
+    <mvc:resources mapping="/js/**" location="/js/"/>
+    <mvc:resources mapping="/font/**" location="/font/"/>
+    <mvc:resources mapping="/img/**" location="/img/"/>
+
+    <!-- 视图解析-FreeMark模版引擎 -->
+    <bean id="freeMarkerConfigurer" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <!-- 视图模版加载路径，相当于视图的前缀 -->
+        <property name="templateLoaderPath" value="/WEB-INF/pages"/>
+    </bean>
+
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <!-- 视图类型为FreeMarkView -->
+        <property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"/>
+        <!-- 视图后缀，注意：前缀必须配置到FreeMarkerConfigurer中 -->
+        <property name="suffix" value=".ftl"/>
+        <property name="contentType" value="text/html;charset=utf-8"/>
+    </bean>
+
+    <!-- 上传文档视图解析器 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 上传文件大小上限，单位为字节(10MB) -->
+        <property name="maxUploadSize">
+            <value>10485760</value>
+        </property>
+        <!-- 请求的编码格式 -->
+        <property name="defaultEncoding">
+            <value>UTF-8</value>
+        </property>
+    </bean>
+
+    <!-- 拦截器配置 -->
+    <mvc:interceptors>
+        <!-- 配置基本路径 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <!-- 拦截器类 -->
+            <bean class="me.tang.hsgd.interceptor.BasePathInterceptor"></bean>
+        </mvc:interceptor>
+        <!-- 访问权限 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="me.tang.hsgd.interceptor.AuthorizedInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+</beans>
